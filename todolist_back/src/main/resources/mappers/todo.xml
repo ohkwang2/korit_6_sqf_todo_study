@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.todolist.repository.TodoMapper">
+    <insert id="save" parameterType="Entity.Todo">
+        insert into
+            todo_tb
+        values
+            (0, #{userId}, #{title}, #{content}, #{important}, #{busy}, 1, #{todoDateTime}, now(), now());
+    </insert>
+    <select id="findAll" resultType="Entity.Todo">
+        select
+            todo_id as todoId,
+            user_id as todoId,
+            title,
+            content,
+            important,
+            busy,
+            status,
+            todoDateTime
+        from
+            todo_tb
+        order by
+            todoDateTime;
+    </select>
+    <select id="findTodoListByTitleandDate" resultType="Entity.Todo">
+        select
+            todo_id as todoId,
+            user_id as todoId,
+            title,
+            content,
+            important,
+            busy,
+            status,
+            todoDate
+        from
+            todo_tb
+        where
+            title like concat("%", #{title}, "%")
+            and todo_date_time like concat("%", #{todoDate}, "%");
+
+    </select>
+    <select id="getTodoCounts" resultType="Entity.TodoCounts">
+        <!--    as 칼럼명 <- Entity 변수명과 매칭 됨    -->
+        select
+            (select
+                count(*)
+            from
+                todo_tb
+            where
+                status = 1) as `all`,
+            (select
+                count(*)
+            from
+                todo_tb
+            where
+                todoDateTime like concat(substr(now(), 1, 10), "%")
+                and status = 1) as `today`,
+            (select
+                count(*)
+            from
+                todo_tb
+            where
+                important = 1
+                and status = 1) as `important`,
+            (select
+                count(*)
+            from
+                todo_tb
+            where
+                busy = 1
+                and status = 1) as `busy`,
+            (select
+                count(*)
+            from
+                todo_tb
+            where
+                status = 2) as `complete`;
+
+    </select>
+
+</mapper>
