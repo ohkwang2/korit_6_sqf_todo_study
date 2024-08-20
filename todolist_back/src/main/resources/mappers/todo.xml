@@ -9,6 +9,41 @@
         values
             (0, #{userId}, #{title}, #{content}, #{important}, #{busy}, 1, #{todoDateTime}, now(), now());
     </insert>
+
+    <update id="changeStatus">
+        update
+            todo_tb
+        set
+            status = if(status = 1, 2, 1),
+            update_date = now()
+        where
+            todo_id = #{todoId}
+    </update>
+
+    <update id="modifyTodoByTodoId">
+        update
+            todo_tb
+        set
+            title = #{title},
+            content = #{content},
+            important = #{important},
+            busy = #{busy},
+            status = #{status},
+            todoDateTime = #{todoDateTime},
+            update_date = now()
+        where
+            todo_id = #{todoId}
+            and user_id = #{userId}
+    </update>
+
+    <delete id="deletebyTodoId">
+        delete
+        from
+            todo_tb
+        where
+            todo_id = #{todoId}
+    </delete>
+
     <select id="findAll" resultType="Entity.Todo">
         select
             todo_id as todoId,
@@ -22,8 +57,9 @@
         from
             todo_tb
         order by
-            todoDateTime;
+            todoDateTime desc;
     </select>
+
     <select id="findTodoListByTitleandDate" resultType="Entity.Todo">
         select
             todo_id as todoId,
@@ -41,6 +77,7 @@
             and todo_date_time like concat("%", #{todoDate}, "%");
 
     </select>
+
     <select id="getTodoCounts" resultType="Entity.TodoCounts">
         <!--    as 칼럼명 <- Entity 변수명과 매칭 됨    -->
         select
@@ -77,7 +114,6 @@
                 todo_tb
             where
                 status = 2) as `complete`;
-
     </select>
 
 </mapper>

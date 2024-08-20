@@ -1,6 +1,7 @@
 package com.study.todolist.controller;
 
 import com.study.todolist.dto.request.todo.ReqAddTodoDto;
+import com.study.todolist.dto.request.todo.ReqModifyTodoDto;
 import com.study.todolist.service.TodoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,22 @@ public class TodoController {
     public ResponseEntity<?> getCounts() {
 //        log.info("{}", reqDto);
         return ResponseEntity.ok().body(todoService.getTodoCounts());
+    }
+
+    @PutMapping("/todo/{todoId}/status")
+    public ResponseEntity<?> changeStatus(@PathVariable int todoId) {
+        return ResponseEntity.ok().body(todoService.changeStatus(todoId)> 0? "successfully saved" : "Failed saving");
+    }
+
+    @PutMapping("/todo/{todoId}")
+    public ResponseEntity<?> modifyTodo(@RequestBody ReqModifyTodoDto reqDto) {
+        log.info("{}", reqDto);
+        return ResponseEntity.ok().body(todoService.modifyTodo(reqDto)> 0? "successfully saved" : "Failed saving");
+    }
+
+    @DeleteMapping("/todo/{todoId}")
+    public ResponseEntity<?> delete(@PathVariable int todoId) {
+        log.info("{}", todoId);
+        return ResponseEntity.ok().body(todoService.deleteTodo(todoId)> 0? "successfully saved" : "Failed saving");
     }
 }

@@ -13,4 +13,7 @@ public interface TodoMapper {
     List<Todo> findAll();
     List<Todo> findTodoListByTitleandDate(ReqTodoListDto reqDto);
     TodoCounts getTodoCounts();
+    int changeStatus(int todoId);
+    int modifyTodoByTodoId(Todo todo);
+    int deletebyTodoId(int todoId);
 }
